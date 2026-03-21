@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="100" fill="#15130e"/>
+  <rect x="110" y="90" width="148" height="210" rx="12" fill="#1c5e44"/>
+  <rect x="110" y="90" width="6" height="210" fill="rgba(255,255,255,0.12)"/>
+  <rect x="140" y="128" width="82" height="5" rx="2.5" fill="rgba(255,255,255,0.4)"/>
+  <rect x="140" y="148" width="60" height="5" rx="2.5" fill="rgba(255,255,255,0.25)"/>
+  <text x="178" y="248" font-family="Georgia,serif" font-size="76" font-weight="500" fill="rgba(255,255,255,0.88)" text-anchor="middle">fo</text>
+  <rect x="272" y="132" width="132" height="178" rx="12" fill="#3b3888"/>
+  <rect x="272" y="132" width="6" height="178" fill="rgba(255,255,255,0.12)"/>
+  <text x="338" y="248" font-family="Georgia,serif" font-size="62" font-weight="500" fill="rgba(255,255,255,0.88)" text-anchor="middle">lio</text>
+  <text x="256" y="390" font-family="Georgia,serif" font-size="34" fill="#c4a460" text-anchor="middle" font-style="italic">reading tracker</text>
+</svg>

@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html data-theme="dark" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#15130e" id="meta-theme">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Folio">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.svg">
+<title>Folio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ff-d:'Playfair Display',Georgia,serif;
+  --ff-b:'DM Sans',system-ui,sans-serif;
+  --ease:cubic-bezier(0.15,0,0.1,1);
+}
+[data-theme="dark"]{
+  --bg:#15130e;--s1:#1c1a14;--s2:#232118;--s3:#2b291e;
+  --bd:rgba(240,236,224,0.08);--bd2:rgba(240,236,224,0.15);
+  --t1:#f0ece2;--t2:#9a9488;--t3:#5e5a4e;
+  --ac:#c4a460;--ac-bg:rgba(196,164,96,0.13);--ac-bgl:rgba(196,164,96,0.07);
+  --ok:#5a9e6e;--ok-bg:rgba(90,158,110,0.12);
+  --warn:#c05a4a;--warn-bg:rgba(192,90,74,0.10);
+  --bnav-bg:#1c1a14;
+}
+[data-theme="light"]{
+  --bg:#f7f4ec;--s1:#eee9de;--s2:#e5e0d2;--s3:#dad4c4;
+  --bd:rgba(30,26,14,0.10);--bd2:rgba(30,26,14,0.18);
+  --t1:#1c1a12;--t2:#6a6254;--t3:#a09870;
+  --ac:#8a6228;--ac-bg:rgba(138,98,40,0.12);--ac-bgl:rgba(138,98,40,0.06);
+  --ok:#3a7e52;--ok-bg:rgba(58,126,82,0.10);
+  --warn:#b03a2a;--warn-bg:rgba(176,58,42,0.08);
+  --bnav-bg:#eee9de;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;height:100dvh}
+body{font-family:var(--ff-b);background:var(--bg);color:var(--t1);font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;height:100%;overflow:hidden;transition:background .3s,color .3s}
+
+/* ── DESKTOP layout ── */
+#app{display:grid;grid-template-columns:172px 1fr;height:100%;transition:grid-template-columns .38s var(--ease)}
+#app.panel-open{grid-template-columns:172px 1fr 310px}
+#bottomnav{display:none}
+
+/* ── MOBILE layout ── */
+@media(max-width:640px){
+  #app{grid-template-columns:1fr !important;grid-template-rows:1fr auto}
+  #sidebar{display:none}
+  #bottomnav{display:flex;border-top:1px solid var(--bd);background:var(--bnav-bg);padding:6px 0 max(6px,env(safe-area-inset-bottom));
+    position:fixed;bottom:0;left:0;right:0;z-index:100;transition:background .3s,border-color .3s}
+  #main{padding:16px 16px 80px;overflow-y:auto;height:100%}
+  #panel{position:fixed;top:0;left:0;right:0;bottom:0;z-index:90;transform:translateX(100%);
+    transition:transform .35s var(--ease);width:100% !important;border:none !important;display:flex !important;flex-direction:column}
+  #panel.mobile-open{transform:translateX(0)}
+  #app.panel-open{grid-template-columns:1fr !important}
+}
+
+/* ── Sidebar ── */
+#sidebar{border-right:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden;transition:border-color .3s}
+.s-logo{padding:22px 18px 16px;font-family:var(--ff-d);font-size:23px;font-weight:400;letter-spacing:-.02em;
+  border-bottom:1px solid var(--bd);margin-bottom:10px;flex-shrink:0}
+.s-logo em{color:var(--ac);font-style:italic}
+.s-sec{padding:0 8px;margin-bottom:12px}
+.s-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);padding:5px 10px;margin-bottom:2px}
+.nav-i{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;font-size:13px;color:var(--t2);
+  cursor:pointer;transition:background .13s,color .13s;user-select:none;border:none;background:none;
+  width:100%;font-family:var(--ff-b);text-align:left}
+.nav-i:hover{background:var(--s2);color:var(--t1)}
+.nav-i.on{background:var(--ac-bg);color:var(--ac)}
+.cnt{margin-left:auto;font-size:11px;background:var(--s2);color:var(--t3);padding:1px 7px;border-radius:9px;min-width:20px;text-align:center}
+.nav-i.on .cnt{background:var(--ac-bgl);color:var(--ac)}
+.s-foot{margin-top:auto;padding:14px 16px;border-top:1px solid var(--bd);flex-shrink:0}
+.tt{display:flex;align-items:center;gap:9px;font-size:12px;color:var(--t3);cursor:pointer;padding:6px;
+  border-radius:6px;transition:background .13s,color .13s;user-select:none}
+.tt:hover{color:var(--t2);background:var(--s2)}
+.tt-track{width:28px;height:16px;background:var(--s3);border-radius:8px;position:relative;flex-shrink:0;transition:background .2s}
+[data-theme="light"] .tt-track{background:var(--ac-bg)}
+.tt-thumb{position:absolute;top:2px;left:2px;width:12px;height:12px;border-radius:50%;
+  background:var(--t3);transition:transform .2s var(--ease),background .2s}
+[data-theme="light"] .tt-thumb{transform:translateX(12px);background:var(--ac)}
+
+/* ── Bottom nav (mobile) ── */
+.bnav-i{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;
+  font-size:10px;color:var(--t3);cursor:pointer;border:none;background:none;font-family:var(--ff-b);
+  transition:color .13s}
+.bnav-i.on{color:var(--ac)}
+.bnav-i svg{flex-shrink:0}
+
+/* ── Main ── */
+#main{overflow-y:auto;overflow-x:hidden;padding:26px 28px}
+.m-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px;gap:10px}
+.m-title{font-family:var(--ff-d);font-size:26px;font-weight:400;letter-spacing:-.025em}
+.m-act{font-size:12px;color:var(--ac);cursor:pointer;padding:5px 11px;border:1px solid var(--bd2);
+  border-radius:5px;transition:background .13s;user-select:none;font-family:var(--ff-b);background:none;white-space:nowrap}
+.m-act:hover{background:var(--ac-bg)}
+
+/* ── Book rows ── */
+.blist{display:flex;flex-direction:column;gap:1px}
+.brow{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:8px;cursor:pointer;
+  transition:background .13s;animation:slideUp .38s var(--ease) both;position:relative}
+.brow:hover{background:var(--s2)}
+.brow.on{background:var(--ac-bg)}
+.brow::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:3px;
+  height:0;background:var(--ac);border-radius:2px;transition:height .2s var(--ease),opacity .2s;opacity:0}
+.brow.on::after{height:32px;opacity:1}
+@media(max-width:640px){.brow::after{display:none}.brow.on::after{display:none}}
+@keyframes slideUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.spine{width:36px;height:54px;border-radius:3px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff-d);font-size:20px;font-weight:500;color:rgba(255,255,255,.88);
+  flex-shrink:0;transition:transform .15s var(--ease)}
+.brow:hover .spine,.brow.on .spine{transform:translateY(-2px)}
+.binfo{flex:1;min-width:0}
+.btitle{font-size:13.5px;font-weight:500;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:2px}
+.bauth{font-size:12px;color:var(--t2);margin-bottom:6px}
+.pbar{height:3px;background:var(--s3);border-radius:2px;overflow:hidden}
+.pfill{height:100%;border-radius:2px;transition:width .55s var(--ease)}
+.bmeta{display:flex;align-items:center;gap:7px;flex-shrink:0}
+.pct-lbl{font-size:12px;color:var(--t3);min-width:30px;text-align:right}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--t3)}
+.sdot.reading{background:var(--ac)}.sdot.done{background:var(--ok)}
+.stars-sm{display:inline-flex;gap:1px}
+.star-sm{font-size:10px;color:var(--t3)}.star-sm.on{color:var(--ac)}
+
+/* ── Section header ── */
+.sec-hd{display:flex;align-items:center;gap:10px;margin:24px 0 10px}
+.sec-lbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);white-space:nowrap}
+.sec-line{flex:1;height:1px;background:var(--bd)}
+
+/* ── Add book form ── */
+.af-wrap{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s var(--ease)}
+.af-wrap.open{grid-template-rows:1fr}
+.af-inner{overflow:hidden}
+.af{background:var(--s1);border:1px solid var(--bd2);border-radius:9px;padding:16px;margin-bottom:10px}
+.frow{display:flex;gap:10px;margin-bottom:12px}
+.ff{flex:1}
+.flbl{font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);margin-bottom:5px}
+.fi{width:100%;background:var(--bg);border:1px solid var(--bd2);border-radius:5px;padding:7px 10px;
+  font-family:var(--ff-b);font-size:14px;color:var(--t1);outline:none;transition:border-color .15s;-webkit-appearance:none}
+.fi::placeholder{color:var(--t3)}.fi:focus{border-color:var(--ac)}
+.factions{display:flex;gap:8px;justify-content:flex-end}
+.btn{font-family:var(--ff-b);font-size:13px;padding:7px 14px;border-radius:5px;cursor:pointer;
+  border:1px solid var(--bd2);background:transparent;color:var(--t2);transition:background .13s,color .13s,transform .1s}
+.btn:hover{background:var(--s2);color:var(--t1)}.btn.pri{background:var(--ac-bg);border-color:var(--ac);color:var(--ac)}
+.btn.pri:hover{background:var(--ac);color:var(--bg)}.btn:active{transform:scale(.97)}
+@media(max-width:640px){.frow{flex-direction:column}}
+
+.empty{padding:60px 16px;color:var(--t3);font-size:13px;line-height:1.8;text-align:center;animation:slideUp .38s var(--ease)}
+.empty strong{display:block;font-size:16px;color:var(--t2);margin-bottom:6px;font-weight:400;font-family:var(--ff-d)}
+
+/* ── Stats ── */
+.sgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.scard{background:var(--s1);border-radius:9px;padding:14px;animation:slideUp .38s var(--ease) both}
+.sval{font-size:26px;font-weight:300;color:var(--t1);font-family:var(--ff-d);letter-spacing:-.03em;line-height:1.1;margin-bottom:3px}
+.slbl2{font-size:11px;color:var(--t3)}
+.heatmap{display:flex;flex-wrap:wrap;gap:4px}
+.hday{width:13px;height:13px;border-radius:3px;background:var(--s2);transition:background .3s}
+.hday.mid{background:color-mix(in srgb,var(--ac) 38%,var(--s3))}.hday.hot{background:color-mix(in srgb,var(--ac) 72%,var(--s3))}.hday.on{background:var(--ac)}
+
+/* ── Panel ── */
+#panel{border-left:1px solid var(--bd);display:flex;flex-direction:column;overflow:hidden;
+  transition:border-color .3s;width:310px;background:var(--bg)}
+.pan-scroll{overflow-y:auto;overflow-x:hidden;flex:1}
+.pan-in{padding:20px 18px}
+@keyframes panIn{from{opacity:0;transform:translateX(10px)}to{opacity:1;transform:translateX(0)}}
+.pan-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px}
+.pan-cover{width:64px;height:90px;border-radius:5px;display:flex;align-items:center;justify-content:center;
+  font-family:var(--ff-d);font-size:32px;font-weight:500;color:rgba(255,255,255,.9)}
+.pan-close{cursor:pointer;color:var(--t3);padding:6px 8px;border-radius:5px;font-size:15px;line-height:1;
+  transition:color .13s,background .13s;border:none;background:none;font-family:var(--ff-b)}
+.pan-close:hover{color:var(--t1);background:var(--s2)}
+.pan-title{font-family:var(--ff-d);font-size:16px;font-weight:400;line-height:1.3;margin-bottom:2px;letter-spacing:-.01em}
+.pan-sub{font-size:11px;color:var(--t3);font-style:italic;margin-bottom:2px}
+.pan-auth{font-size:12px;color:var(--t2);margin-bottom:11px}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.badge{font-size:11px;padding:2px 7px;border-radius:4px;background:var(--s2);color:var(--t2)}
+.badge.ac{background:var(--ac-bg);color:var(--ac)}.badge.ok{background:var(--ok-bg);color:var(--ok)}
+.psec{margin-bottom:16px}
+.psec-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin-bottom:7px}
+.prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--t2);margin-bottom:5px}
+.prog-track{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;margin-bottom:9px}
+.prog-fill{height:100%;border-radius:2px;transition:width .5s var(--ease)}
+input[type=range].pslider{width:100%;height:4px;cursor:pointer;-webkit-appearance:none;appearance:none;
+  background:var(--s3);border-radius:2px;outline:none;border:none;display:block;margin-bottom:5px}
+input[type=range].pslider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
+  border-radius:50%;background:var(--ac);cursor:pointer;transition:transform .15s}
+input[type=range].pslider::-webkit-slider-thumb:hover{transform:scale(1.2)}
+.slider-hint{font-size:11px;color:var(--t3);text-align:right}
+.pactions{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
+.pbtn{font-family:var(--ff-b);font-size:13px;padding:9px 12px;border-radius:6px;border:1px solid var(--bd2);
+  background:transparent;color:var(--t2);cursor:pointer;text-align:left;
+  transition:background .13s,color .13s,transform .1s;width:100%}
+.pbtn:hover{background:var(--s2);color:var(--t1)}.pbtn.pri{border-color:var(--ac);color:var(--ac);background:var(--ac-bgl)}
+.pbtn.pri:hover{background:var(--ac);color:var(--bg)}.pbtn.danger{border-color:rgba(192,90,74,.3);color:var(--warn)}
+.pbtn.danger:hover{background:var(--warn-bg)}.pbtn:active{transform:scale(.98)}
+.meta-row{font-size:11px;color:var(--t3);margin-bottom:14px;line-height:1.9}
+
+/* ── Notes ── */
+.notes-hd{border-top:1px solid var(--bd);padding-top:14px;margin-bottom:0}
+.notes-toggle{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;padding-bottom:10px}
+.notes-toggle:hover .nt-lbl{color:var(--t2)}
+.nt-lbl{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);transition:color .13s}
+.nt-count{font-size:10px;background:var(--s2);color:var(--t3);padding:1px 7px;border-radius:9px}
+.nt-chevron{font-size:10px;color:var(--t3);margin-left:auto;transition:transform .25s var(--ease);display:inline-block}
+.nt-chevron.open{transform:rotate(180deg)}
+.notes-body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s var(--ease)}
+.notes-body.open{grid-template-rows:1fr}
+.notes-inner{overflow:hidden}
+
+.notes-ctrl{display:flex;align-items:center;gap:5px;padding-bottom:11px;flex-wrap:wrap}
+.sort-btn{font-size:11px;padding:4px 9px;border-radius:4px;border:1px solid var(--bd2);background:none;
+  color:var(--t3);cursor:pointer;font-family:var(--ff-b);transition:all .13s}
+.sort-btn:hover{color:var(--t2);background:var(--s2)}
+.sort-btn.on{border-color:var(--ac);color:var(--ac);background:var(--ac-bgl)}
+.sort-dir{font-size:11px;padding:4px 8px;border-radius:4px;border:1px solid var(--bd2);background:none;
+  color:var(--t3);cursor:pointer;font-family:var(--ff-b);transition:all .13s}
+.sort-dir:hover{background:var(--s2);color:var(--t2)}
+
+.note-card{background:var(--s1);border-radius:8px;padding:11px 12px;margin-bottom:7px;
+  animation:slideUp .3s var(--ease) both;position:relative;transition:background .13s}
+.note-card:hover{background:var(--s2)}
+.note-card:hover .nc-del{opacity:1}
+.nc-top{display:flex;align-items:flex-start;gap:7px;margin-bottom:7px}
+.nc-page{font-size:11px;font-weight:500;color:var(--ac);background:var(--ac-bgl);padding:2px 7px;
+  border-radius:3px;white-space:nowrap;flex-shrink:0;cursor:default;border:none;font-family:var(--ff-b)}
+.nc-star{font-size:14px;color:var(--t3);cursor:pointer;transition:color .13s,transform .15s;
+  padding:0;background:none;border:none;flex-shrink:0;line-height:1}
+.nc-star:hover{transform:scale(1.2)}.nc-star.on{color:var(--ac)}
+.nc-tags{display:flex;flex-wrap:wrap;gap:3px;flex:1}
+.nc-tag{font-size:10px;padding:1px 6px;border-radius:3px;background:var(--s3);color:var(--t3)}
+.nc-tag.quote{color:#7aadca;background:rgba(122,173,202,.12)}.nc-tag.idea{color:#9ecb77;background:rgba(158,203,119,.11)}
+.nc-tag.question{color:#d0a060;background:rgba(208,160,96,.11)}.nc-tag.important{color:#c07878;background:rgba(192,120,120,.11)}
+.nc-body{font-size:13px;color:var(--t2);line-height:1.65;word-break:break-word}
+.nc-del{position:absolute;top:7px;right:7px;background:none;border:none;color:var(--t3);cursor:pointer;
+  font-size:12px;opacity:0;transition:opacity .13s,color .13s;padding:3px 5px;border-radius:4px;font-family:var(--ff-b)}
+.nc-del:hover{color:var(--warn);background:var(--warn-bg)}
+@media(max-width:640px){.nc-del{opacity:1}}
+
+.add-note-form{background:var(--s1);border:1px solid var(--bd2);border-radius:8px;padding:12px;
+  margin-bottom:8px;animation:slideUp .25s var(--ease)}
+.anf-row{display:flex;gap:8px;margin-bottom:9px;align-items:flex-start}
+.ani{width:100%;background:var(--bg);border:1px solid var(--bd2);border-radius:5px;padding:8px 9px;
+  font-family:var(--ff-b);font-size:14px;color:var(--t1);outline:none;transition:border-color .15s;
+  resize:none;-webkit-appearance:none}
+.ani::placeholder{color:var(--t3)}.ani:focus{border-color:var(--ac)}
+.ani.sm{width:70px;flex-shrink:0}
+.tag-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:9px}
+.tag-toggle{font-size:11px;padding:3px 9px;border-radius:4px;border:1px solid var(--bd2);background:none;
+  color:var(--t3);cursor:pointer;font-family:var(--ff-b);transition:all .13s}
+.tag-toggle.quote{color:#7aadca}.tag-toggle.idea{color:#9ecb77}.tag-toggle.question{color:#d0a060}.tag-toggle.important{color:#c07878}
+.tag-toggle.on{border-color:currentColor}
+.tag-toggle.on.quote{background:rgba(122,173,202,.1)}.tag-toggle.on.idea{background:rgba(158,203,119,.1)}
+.tag-toggle.on.question{background:rgba(208,160,96,.1)}.tag-toggle.on.important{background:rgba(192,120,120,.1)}
+.anf-actions{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.star-toggle{font-size:19px;color:var(--t3);cursor:pointer;transition:color .13s,transform .15s;background:none;border:none;padding:0;line-height:1}
+.star-toggle:hover{transform:scale(1.15)}.star-toggle.on{color:var(--ac)}
+.anf-btns{display:flex;gap:7px}
+
+.add-note-btn{width:100%;font-family:var(--ff-b);font-size:12px;padding:9px;border-radius:6px;
+  border:1px dashed var(--bd2);background:none;color:var(--t3);cursor:pointer;transition:all .15s;text-align:center;margin-top:2px}
+.add-note-btn:hover{border-color:var(--ac);color:var(--ac);background:var(--ac-bgl)}
+
+/* ── Toast ── */
+.toast{position:fixed;bottom:max(22px,env(safe-area-inset-bottom,22px));left:50%;
+  transform:translateX(-50%) translateY(8px);background:var(--s3);color:var(--t1);
+  padding:9px 18px;border-radius:7px;font-size:13px;opacity:0;
+  transition:opacity .2s,transform .25s var(--ease);pointer-events:none;
+  white-space:nowrap;z-index:300;border:1px solid var(--bd2)}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:640px){.toast{bottom:calc(64px + env(safe-area-inset-bottom,0px))}}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Sidebar (desktop) -->
+  <nav id="sidebar">
+    <div class="s-logo">fo<em>lio</em></div>
+    <div class="s-sec">
+      <div class="s-lbl">Library</div>
+      <button class="nav-i on" data-v="library" onclick="setView('library')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/></svg>
+        All books <span class="cnt" id="c-all">0</span>
+      </button>
+      <button class="nav-i" data-v="reading" onclick="setView('reading')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 11V3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M2 2.5s2 .5 5 .5 5-.5 5-.5v9s-2-.5-5-.5-5 .5-5 .5V2.5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+        In progress <span class="cnt" id="c-r">0</span>
+      </button>
+      <button class="nav-i" data-v="queue" onclick="setView('queue')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M4 3.5h8M4 7h8M4 10.5h5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><circle cx="1.5" cy="3.5" r=".8" fill="currentColor"/><circle cx="1.5" cy="7" r=".8" fill="currentColor"/><circle cx="1.5" cy="10.5" r=".8" fill="currentColor"/></svg>
+        Queue <span class="cnt" id="c-q">0</span>
+      </button>
+      <button class="nav-i" data-v="done" onclick="setView('done')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Finished <span class="cnt" id="c-d">0</span>
+      </button>
+    </div>
+    <div class="s-sec">
+      <div class="s-lbl">Insights</div>
+      <button class="nav-i" data-v="stats" onclick="setView('stats')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="7" width="3" height="6" rx=".5" stroke="currentColor" stroke-width="1.1"/><rect x="5.5" y="4" width="3" height="9" rx=".5" stroke="currentColor" stroke-width="1.1"/><rect x="10" y="1" width="3" height="12" rx=".5" stroke="currentColor" stroke-width="1.1"/></svg>
+        Stats
+      </button>
+    </div>
+    <div class="s-foot">
+      <div class="tt" onclick="toggleTheme()">
+        <div class="tt-track"><div class="tt-thumb"></div></div>
+        <span id="tlbl">Light mode</span>
+      </div>
+    </div>
+  </nav>
+
+  <main id="main"></main>
+
+  <aside id="panel" style="display:none"></aside>
+</div>
+
+<!-- Bottom nav (mobile) -->
+<div id="bottomnav">
+  <button class="bnav-i on" data-v="library" onclick="setView('library')">
+    <svg width="20" height="20" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.1"/></svg>
+    Library
+  </button>
+  <button class="bnav-i" data-v="reading" onclick="setView('reading')">
+    <svg width="20" height="20" viewBox="0 0 14 14" fill="none"><path d="M7 11V3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M2 2.5s2 .5 5 .5 5-.5 5-.5v9s-2-.5-5-.5-5 .5-5 .5V2.5z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+    Reading
+  </button>
+  <button class="bnav-i" data-v="queue" onclick="setView('queue')">
+    <svg width="20" height="20" viewBox="0 0 14 14" fill="none"><path d="M4 3.5h8M4 7h8M4 10.5h5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><circle cx="1.5" cy="3.5" r=".8" fill="currentColor"/><circle cx="1.5" cy="7" r=".8" fill="currentColor"/><circle cx="1.5" cy="10.5" r=".8" fill="currentColor"/></svg>
+    Queue
+  </button>
+  <button class="bnav-i" data-v="done" onclick="setView('done')">
+    <svg width="20" height="20" viewBox="0 0 14 14" fill="none"><path d="M2.5 7.5l3 3 6-6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Done
+  </button>
+  <button class="bnav-i" data-v="stats" onclick="setView('stats')">
+    <svg width="20" height="20" viewBox="0 0 14 14" fill="none"><rect x="1" y="7" width="3" height="6" rx=".5" stroke="currentColor" stroke-width="1.1"/><rect x="5.5" y="4" width="3" height="9" rx=".5" stroke="currentColor" stroke-width="1.1"/><rect x="10" y="1" width="3" height="12" rx=".5" stroke="currentColor" stroke-width="1.1"/></svg>
+    Stats
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── Persistence ──────────────────────────────── */
+const DEFAULTS = {
+  books: [
+    {id:1,title:"Gödel, Escher, Bach",subtitle:"An Eternal Golden Braid",author:"Douglas Hofstadter",year:1979,pages:777,progress:368,color:"#1c5e44",letter:"G",genre:"Non-fiction",status:"reading",started:"Jan 8, 2025",rating:null,finished:null},
+    {id:2,title:"Steppenwolf",subtitle:null,author:"Hermann Hesse",year:1927,pages:218,progress:176,color:"#3b3888",letter:"S",genre:"Fiction",status:"reading",started:"Feb 14, 2025",rating:null,finished:null},
+    {id:3,title:"The Brothers Karamazov",subtitle:null,author:"Fyodor Dostoevsky",year:1880,pages:824,progress:99,color:"#6e2e16",letter:"K",genre:"Fiction",status:"reading",started:"Mar 1, 2025",rating:null,finished:null},
+    {id:4,title:"Dune",subtitle:null,author:"Frank Herbert",year:1965,pages:688,progress:0,color:"#7a5014",letter:"D",genre:"Science fiction",status:"queue",started:null,rating:null,finished:null},
+    {id:5,title:"Principia Mathematica",subtitle:"Vol. I",author:"Whitehead & Russell",year:1910,pages:674,progress:0,color:"#2e2c24",letter:"P",genre:"Mathematics",status:"queue",started:null,rating:null,finished:null},
+    {id:6,title:"The Stranger",subtitle:null,author:"Albert Camus",year:1942,pages:159,progress:159,color:"#3a5870",letter:"S",genre:"Fiction",status:"done",started:"Dec 1, 2024",rating:5,finished:"Jan 3, 2025"},
+    {id:7,title:"A Beautiful Mind",subtitle:null,author:"Sylvia Nasar",year:1998,pages:461,progress:461,color:"#3d5e3e",letter:"M",genre:"Biography",status:"done",started:"Nov 2, 2024",rating:4,finished:"Dec 17, 2024"},
+  ],
+  notes: [
+    {id:101,bookId:1,page:45,text:"The strange loop concept first emerges here — a system can refer back to itself meaningfully. This is the structural core of everything that follows.",tags:["idea"],starred:true,ts:1739800000000},
+    {id:102,bookId:1,page:112,text:"\"I am the strange loop\" — the thesis, stated obliquely for the first time.",tags:["quote"],starred:false,ts:1739900000000},
+    {id:103,bookId:1,page:203,text:"How does Hofstadter reconcile top-down causality here with the reductionist account of neurons? Come back to this.",tags:["question"],starred:true,ts:1740100000000},
+    {id:104,bookId:2,page:38,text:"Haller sees his duality as a curse. Hesse frames it as the human condition — everyone has a wolf.",tags:["idea"],starred:false,ts:1740200000000},
+    {id:105,bookId:2,page:87,text:"The Magic Theatre sequence is deliberately surreal. Don't over-interpret individual scenes — respond to the whole.",tags:["important"],starred:true,ts:1740500000000},
+    {id:106,bookId:6,page:23,text:"\"Mother died today. Or maybe yesterday; I can't be sure.\" — the entire emotional register of the novel in one sentence.",tags:["quote","important"],starred:true,ts:1735000000000},
+  ],
+  nextId: 300,
+  nextNoteId: 200,
+};
+
+function load() {
+  try {
+    const b = localStorage.getItem('folio-books');
+    const n = localStorage.getItem('folio-notes');
+    const ids = localStorage.getItem('folio-ids');
+    if (b) books = JSON.parse(b);
+    if (n) notes = JSON.parse(n);
+    if (ids) { const o = JSON.parse(ids); nextId = o.nextId; nextNoteId = o.nextNoteId; }
+  } catch(e) {}
+}
+
+function save() {
+  try {
+    localStorage.setItem('folio-books', JSON.stringify(books));
+    localStorage.setItem('folio-notes', JSON.stringify(notes));
+    localStorage.setItem('folio-ids', JSON.stringify({nextId, nextNoteId}));
+  } catch(e) {}
+}
+
+/* ── State ── */
+let books = JSON.parse(JSON.stringify(DEFAULTS.books));
+let notes = JSON.parse(JSON.stringify(DEFAULTS.notes));
+let nextId = DEFAULTS.nextId;
+let nextNoteId = DEFAULTS.nextNoteId;
+load();
+
+let sel = null, view = 'library', adding = false;
+let notesOpen = true, sortKey = 'page', sortDir = 1;
+let addingNote = false, draftTags = [], draftStarred = false;
+let toastTimer = null;
+
+/* ── Helpers ── */
+const byId = id => books.find(b => b.id === id);
+const byS  = s  => books.filter(b => b.status === s);
+const pct  = b  => b.pages ? Math.round(b.progress / b.pages * 100) : 0;
+const fpct = b  => pct(b) + '%';
+const bookNotes = id => notes.filter(n => n.bookId === id);
+
+function sortedNotes(id) {
+  return bookNotes(id).slice().sort((a, b) => {
+    if (sortKey === 'page')    return (a.page - b.page) * sortDir;
+    if (sortKey === 'length')  return (a.text.length - b.text.length) * sortDir;
+    if (sortKey === 'starred') return ((b.starred ? 1 : 0) - (a.starred ? 1 : 0)) * sortDir;
+    return 0;
+  });
+}
+
+function isMobile() { return window.innerWidth <= 640; }
+
+function updateCounts() {
+  document.getElementById('c-all').textContent = books.length;
+  document.getElementById('c-r').textContent   = byS('reading').length;
+  document.getElementById('c-q').textContent   = byS('queue').length;
+  document.getElementById('c-d').textContent   = byS('done').length;
+}
+
+/* ── Navigation ── */
+function setView(v) {
+  view = v; adding = false;
+  // Close panel on mobile when switching views
+  if (isMobile() && sel) closePanel();
+  document.querySelectorAll('.nav-i, .bnav-i').forEach(el =>
+    el.classList.toggle('on', el.dataset.v === v));
+  renderMain();
+  updateCounts();
+}
+
+/* ── Book row ── */
+function rowHTML(b, i) {
+  const p = pct(b);
+  const stars = Array(5).fill(0).map((_,k) =>
+    `<span class="star-sm${k < (b.rating||0) ? ' on' : ''}">${k < (b.rating||0) ? '★' : '☆'}</span>`
+  ).join('');
+  const nc = bookNotes(b.id).length;
+  return `<div class="brow${sel===b.id?' on':''}" data-id="${b.id}" style="animation-delay:${i*38}ms" onclick="selectBook(${b.id})">
+    <div class="spine" style="background:${b.color}">${b.letter}</div>
+    <div class="binfo">
+      <div class="btitle">${esc(b.title)}</div>
+      <div class="bauth">${esc(b.author)}${b.year ? ' · ' + b.year : ''}</div>
+      ${b.status==='reading' ? `<div class="pbar"><div class="pfill" data-fill="${b.id}" style="width:${p}%;background:${b.color}"></div></div>` : ''}
+      ${b.status==='done' && b.rating ? `<div class="stars-sm">${stars}</div>` : ''}
+    </div>
+    <div class="bmeta">
+      ${b.status==='reading' ? `<span class="pct-lbl" data-pct="${b.id}">${fpct(b)}</span>` : ''}
+      ${b.status==='done'    ? `<span class="pct-lbl" style="color:var(--ok)">Done</span>` : ''}
+      ${b.status==='queue'   ? `<span class="pct-lbl" style="color:var(--t3)">Next</span>` : ''}
+      ${nc ? `<span style="font-size:10px;color:var(--t3);background:var(--s2);padding:1px 6px;border-radius:8px" data-ncnt="${b.id}">${nc}</span>` : `<span data-ncnt="${b.id}" style="display:none"></span>`}
+      <div class="sdot ${b.status}"></div>
+    </div>
+  </div>`;
+}
+
+/* ── Main ── */
+function renderMain() {
+  const m = document.getElementById('main');
+  if (view === 'stats')   { m.innerHTML = renderStats(); return; }
+  if (view === 'library') renderListView(m, books, 'All books');
+  else if (view === 'reading') renderListView(m, byS('reading'), 'In progress');
+  else if (view === 'done')    renderListView(m, byS('done'), 'Finished');
+  else if (view === 'queue')   renderQueueView(m);
+}
+
+function renderListView(m, list, title) {
+  if (!list.length) {
+    m.innerHTML = `<div class="m-hd"><h1 class="m-title">${title}</h1></div>
+      <div class="empty"><strong>Nothing here yet</strong>Your books will appear here.</div>`;
+    return;
+  }
+  m.innerHTML = `<div class="m-hd"><h1 class="m-title">${title}</h1></div>
+    <div class="blist">${list.map((b,i) => rowHTML(b,i)).join('')}</div>`;
+}
+
+function renderQueueView(m) {
+  const queue = byS('queue');
+  m.innerHTML = `<div class="m-hd">
+    <h1 class="m-title">Queue</h1>
+    <button class="m-act" onclick="toggleAdding()">+ Add book</button>
+  </div>
+  <div class="af-wrap${adding?' open':''}" id="afwrap"><div class="af-inner"><div class="af">
+    <div class="frow">
+      <div class="ff"><div class="flbl">Title</div><input class="fi" id="fi-t" placeholder="Book title" autocomplete="off"></div>
+      <div class="ff"><div class="flbl">Author</div><input class="fi" id="fi-a" placeholder="Author name" autocomplete="off"></div>
+    </div>
+    <div class="frow">
+      <div class="ff"><div class="flbl">Pages</div><input class="fi" id="fi-p" placeholder="~300" type="number" min="1" autocomplete="off"></div>
+      <div class="ff"><div class="flbl">Genre</div><input class="fi" id="fi-g" placeholder="Fiction…" autocomplete="off"></div>
+    </div>
+    <div class="factions">
+      <button class="btn" onclick="toggleAdding()">Cancel</button>
+      <button class="btn pri" onclick="submitAdd()">Add to queue →</button>
+    </div>
+  </div></div></div>
+  ${!queue.length && !adding
+    ? `<div class="empty"><strong>Queue is empty</strong>Add books you plan to read next.</div>`
+    : `<div class="blist">${queue.map((b,i) => rowHTML(b,i)).join('')}</div>`}`;
+  if (adding) setTimeout(() => document.getElementById('fi-t')?.focus(), 80);
+}
+
+function renderStats() {
+  const NOW = new Date(2025, 2, 21);
+  const sessions = [];
+  for (let i=55;i>=0;i--) {
+    const d=new Date(NOW);d.setDate(d.getDate()-i);
+    if(i%7!==0&&i%11!==3){const n=1+Math.floor(Math.random()*2);for(let j=0;j<n;j++)sessions.push({date:d.toDateString(),pages:12+Math.floor(Math.random()*38)});}
+  }
+  const monthStart = new Date(2025,2,1);
+  const monthPages = sessions.filter(s=>new Date(s.date)>=monthStart).reduce((a,s)=>a+s.pages,0);
+  let streak = 0;
+  for(let i=0;i<30;i++){const d=new Date(NOW);d.setDate(d.getDate()-i);if(sessions.some(s=>s.date===d.toDateString()))streak++;else break;}
+  const avg = sessions.length ? Math.round(sessions.reduce((a,s)=>a+s.pages,0)/Math.max(1,new Set(sessions.map(s=>s.date)).size)) : 0;
+  const cells = Array(56).fill(0).map((_,i)=>{
+    const d=new Date(NOW);d.setDate(d.getDate()-(55-i));
+    const t=sessions.filter(s=>s.date===d.toDateString()).reduce((a,s)=>a+s.pages,0);
+    const c=t>40?'on':t>20?'hot':t>0?'mid':'';
+    return `<div class="hday ${c}" title="${d.toDateString()}${t?' · '+t+' pp':''}"></div>`;
+  }).join('');
+  const reading = byS('reading'); const done = byS('done');
+  return `<div class="m-hd"><h1 class="m-title">Stats</h1></div>
+    <div class="sgrid">
+      <div class="scard" style="animation-delay:0ms"><div class="sval">${monthPages}</div><div class="slbl2">Pages this month</div></div>
+      <div class="scard" style="animation-delay:50ms"><div class="sval">${streak}</div><div class="slbl2">Day streak</div></div>
+      <div class="scard" style="animation-delay:100ms"><div class="sval">${avg}</div><div class="slbl2">Avg. / day</div></div>
+    </div>
+    <div class="sgrid" style="margin-top:-8px">
+      <div class="scard" style="animation-delay:140ms"><div class="sval">${notes.length}</div><div class="slbl2">Total notes</div></div>
+      <div class="scard" style="animation-delay:180ms"><div class="sval">${notes.filter(n=>n.starred).length}</div><div class="slbl2">Starred</div></div>
+      <div class="scard" style="animation-delay:220ms"><div class="sval">${books.length}</div><div class="slbl2">Books</div></div>
+    </div>
+    <div class="sec-hd"><span class="sec-lbl">Activity · 56 days</span><div class="sec-line"></div></div>
+    <div class="heatmap" style="animation:slideUp .4s var(--ease) both">${cells}</div>
+    ${reading.length ? `<div class="sec-hd" style="margin-top:24px"><span class="sec-lbl">In progress</span><div class="sec-line"></div></div>
+    ${reading.map((b,i)=>`<div style="margin-bottom:14px;animation:slideUp .38s var(--ease) both;animation-delay:${i*50}ms">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:5px">
+        <div class="spine" style="width:26px;height:38px;font-size:14px;background:${b.color}">${b.letter}</div>
+        <div style="flex:1;min-width:0"><div class="btitle">${esc(b.title)}</div><div style="font-size:11px;color:var(--t3)">${b.progress} / ${b.pages} pages</div></div>
+        <div style="font-size:13px;color:var(--ac);flex-shrink:0">${fpct(b)}</div>
+      </div>
+      <div class="pbar"><div class="pfill" style="width:${pct(b)}%;background:${b.color}"></div></div>
+    </div>`).join('')}` : ''}
+    ${done.length ? `<div class="sec-hd" style="margin-top:8px"><span class="sec-lbl">Finished · ${done.length}</span><div class="sec-line"></div></div>
+      <div class="blist">${done.map((b,i)=>rowHTML(b,i)).join('')}</div>` : ''}`;
+}
+
+/* ── Panel ── */
+function renderPanel() {
+  const panel = document.getElementById('panel');
+  const app   = document.getElementById('app');
+  const b = sel ? byId(sel) : null;
+
+  if (!b) {
+    app.classList.remove('panel-open');
+    if (isMobile()) {
+      panel.classList.remove('mobile-open');
+      setTimeout(() => { panel.style.display = 'none'; panel.innerHTML = ''; }, 380);
+    } else {
+      setTimeout(() => { panel.style.display = 'none'; panel.innerHTML = ''; }, 380);
+    }
+    return;
+  }
+
+  panel.style.display = 'flex';
+  panel.style.flexDirection = 'column';
+  requestAnimationFrame(() => {
+    app.classList.add('panel-open');
+    if (isMobile()) requestAnimationFrame(() => panel.classList.add('mobile-open'));
+  });
+
+  const p = pct(b);
+  const ns = sortedNotes(b.id);
+
+  const statusBadge = b.status === 'reading' ? `<span class="badge ac">Reading</span>`
+    : b.status === 'queue' ? `<span class="badge">Queued</span>`
+    : `<span class="badge ok">Finished</span>`;
+
+  const starRating = Array(5).fill(0).map((_,k) =>
+    `<span style="cursor:pointer;font-size:18px;color:${k<(b.rating||0)?'var(--ac)':'var(--t3)'};transition:color .13s" onclick="setRating(${b.id},${k+1})">★</span>`
+  ).join('');
+
+  const noteCards = ns.map(n => {
+    const tagBadges = n.tags.map(t => `<span class="nc-tag ${t}">#${t}</span>`).join('');
+    return `<div class="note-card" data-nid="${n.id}">
+      <div class="nc-top">
+        <span class="nc-page">p.${n.page}</span>
+        <div class="nc-tags">${tagBadges}</div>
+        <button class="nc-star${n.starred?' on':''}" onclick="toggleNoteStar(${n.id})" title="${n.starred?'Unstar':'Star'}">★</button>
+        <button class="nc-del" onclick="deleteNote(${n.id})" title="Delete">✕</button>
+      </div>
+      <div class="nc-body">${esc(n.text)}</div>
+    </div>`;
+  }).join('');
+
+  const tagsHTML = ['quote','idea','question','important'].map(t =>
+    `<button class="tag-toggle ${t}${draftTags.includes(t)?' on':''}" onclick="toggleDraftTag('${t}')">#${t}</button>`
+  ).join('');
+
+  const addNoteForm = addingNote ? `<div class="add-note-form">
+    <div class="anf-row">
+      <input class="ani sm" id="an-page" type="number" placeholder="p." min="1" max="${b.pages||9999}" inputmode="numeric">
+      <textarea class="ani" id="an-text" placeholder="Your note…" rows="3"></textarea>
+    </div>
+    <div class="tag-row">${tagsHTML}</div>
+    <div class="anf-actions">
+      <button class="star-toggle${draftStarred?' on':''}" onclick="toggleDraftStar()" title="Star this note">★</button>
+      <div class="anf-btns">
+        <button class="btn" onclick="cancelNote()">Cancel</button>
+        <button class="btn pri" onclick="submitNote(${b.id})">Save →</button>
+      </div>
+    </div>
+  </div>` : '';
+
+  const sortBtns = ['page','length','starred'].map(k =>
+    `<button class="sort-btn${sortKey===k?' on':''}" onclick="setSortKey('${k}')">${k==='starred'?'★':k}</button>`
+  ).join('');
+
+  const mobileBack = isMobile()
+    ? `<div style="display:flex;align-items:center;gap:10px;padding:14px 16px 0;border-bottom:1px solid var(--bd);margin-bottom:14px">
+        <button onclick="closePanel()" style="background:none;border:none;color:var(--t2);cursor:pointer;font-size:20px;line-height:1;padding:4px;font-family:var(--ff-b)">←</button>
+        <span style="font-family:var(--ff-d);font-size:15px;color:var(--t1)">${esc(b.title)}</span>
+      </div>` : '';
+
+  panel.innerHTML = `${mobileBack}<div class="pan-scroll"><div class="pan-in" style="animation:panIn .35s var(--ease)">
+    <div class="pan-top">
+      <div class="pan-cover" style="background:${b.color}">${b.letter}</div>
+      ${!isMobile() ? `<button class="pan-close" onclick="closePanel()">✕</button>` : ''}
+    </div>
+    <div class="pan-title">${esc(b.title)}</div>
+    ${b.subtitle ? `<div class="pan-sub">${esc(b.subtitle)}</div>` : ''}
+    <div class="pan-auth">${esc(b.author)}</div>
+    <div class="badges">${statusBadge}${b.genre?`<span class="badge">${esc(b.genre)}</span>`:''}${b.year?`<span class="badge">${b.year}</span>`:''}${b.pages?`<span class="badge">${b.pages} pp.</span>`:''}</div>
+
+    ${b.status === 'reading' ? `<div class="psec">
+      <div class="psec-lbl">Progress</div>
+      <div class="prog-top"><span id="plbl">${b.progress} of ${b.pages} pages</span><span id="ppct">${fpct(b)}</span></div>
+      <div class="prog-track"><div class="prog-fill" id="pfill" style="width:${p}%;background:${b.color}"></div></div>
+      <input type="range" class="pslider" min="0" max="${b.pages}" value="${b.progress}" step="1" oninput="updateProgress(${b.id},+this.value)">
+      <div class="slider-hint">drag to update progress</div>
+    </div>` : ''}
+
+    ${b.status === 'done' ? `<div class="psec"><div class="psec-lbl">Rating</div><div style="display:flex;gap:5px">${starRating}</div></div>` : ''}
+
+    <div class="meta-row">
+      ${b.started  ? 'Started ' + b.started + '<br>' : ''}
+      ${b.finished ? 'Finished ' + b.finished : ''}
+      ${b.status==='reading'&&b.pages&&b.progress ? '~'+Math.ceil((b.pages-b.progress)/30)+' days remaining' : ''}
+    </div>
+
+    <div class="pactions">
+      ${b.status==='queue'   ? `<button class="pbtn pri" onclick="startReading(${b.id})">Start reading →</button>` : ''}
+      ${b.status==='reading' ? `<button class="pbtn pri" onclick="markDone(${b.id})">Mark as finished</button>` : ''}
+      ${b.status==='reading' ? `<button class="pbtn" onclick="moveToQueue(${b.id})">Move to queue</button>` : ''}
+      ${b.status==='done'    ? `<button class="pbtn" onclick="startReReading(${b.id})">Read again</button>` : ''}
+      <button class="pbtn danger" onclick="removeBook(${b.id})">Remove from library</button>
+    </div>
+
+    <!-- Notes -->
+    <div class="notes-hd">
+      <div class="notes-toggle" onclick="toggleNotes()">
+        <span class="nt-lbl">Notes</span>
+        <span class="nt-count">${ns.length}</span>
+        <span class="nt-chevron${notesOpen?' open':''}">▼</span>
+      </div>
+    </div>
+    <div class="notes-body${notesOpen?' open':''}" id="notes-body">
+      <div class="notes-inner">
+        <div class="notes-ctrl">
+          ${sortBtns}
+          <button class="sort-dir" onclick="toggleSortDir()" title="Reverse order">${sortDir===1?'↑':'↓'}</button>
+        </div>
+        ${noteCards}
+        ${addNoteForm}
+        <button class="add-note-btn" onclick="startAddNote()">+ Add note</button>
+      </div>
+    </div>
+  </div></div>`;
+
+  if (addingNote) {
+    setTimeout(() => {
+      const pg = document.getElementById('an-page');
+      const tx = document.getElementById('an-text');
+      if (pg && !pg.value && b.progress) pg.value = b.progress;
+      if (pg) pg.focus();
+    }, 70);
+  }
+}
+
+/* ── Notes actions ── */
+function toggleNotes() {
+  notesOpen = !notesOpen;
+  document.getElementById('notes-body')?.classList.toggle('open', notesOpen);
+  document.querySelector('.nt-chevron')?.classList.toggle('open', notesOpen);
+}
+
+function setSortKey(k) {
+  if (sortKey === k) sortDir *= -1; else { sortKey = k; sortDir = 1; }
+  renderPanel();
+}
+function toggleSortDir() { sortDir *= -1; renderPanel(); }
+
+function startAddNote() { addingNote = true; draftTags = []; draftStarred = false; renderPanel(); }
+function cancelNote() { addingNote = false; draftTags = []; draftStarred = false; renderPanel(); }
+
+function toggleDraftTag(t) {
+  if (draftTags.includes(t)) draftTags = draftTags.filter(x => x !== t);
+  else draftTags.push(t);
+  document.querySelectorAll('.tag-toggle').forEach(el => {
+    const tag = el.textContent.replace('#','');
+    el.classList.toggle('on', draftTags.includes(tag));
+  });
+}
+
+function toggleDraftStar() {
+  draftStarred = !draftStarred;
+  document.querySelector('.star-toggle')?.classList.toggle('on', draftStarred);
+}
+
+function submitNote(bookId) {
+  const page = parseInt(document.getElementById('an-page')?.value);
+  const text = (document.getElementById('an-text')?.value || '').trim();
+  if (!page || isNaN(page)) { toast('Enter a page number'); return; }
+  if (!text) { toast('Write something first'); return; }
+  notes.push({ id: nextNoteId++, bookId, page, text, tags: [...draftTags], starred: draftStarred, ts: Date.now() });
+  addingNote = false; draftTags = []; draftStarred = false;
+  save();
+  toast('Note saved');
+  renderPanel();
+  refreshNoteBadge(bookId);
+}
+
+function toggleNoteStar(nid) {
+  const n = notes.find(x => x.id === nid);
+  if (!n) return;
+  n.starred = !n.starred;
+  save();
+  document.querySelector(`[data-nid="${nid}"] .nc-star`)?.classList.toggle('on', n.starred);
+  toast(n.starred ? 'Starred' : 'Unstarred');
+}
+
+function deleteNote(nid) {
+  const n = notes.find(x => x.id === nid);
+  if (!n) return;
+  const bookId = n.bookId;
+  notes = notes.filter(x => x.id !== nid);
+  save();
+  const card = document.querySelector(`[data-nid="${nid}"]`);
+  if (card) {
+    card.style.cssText += 'opacity:0;transform:translateX(8px);transition:opacity .2s,transform .2s';
+    setTimeout(() => renderPanel(), 210);
+  }
+  refreshNoteBadge(bookId);
+  toast('Note deleted');
+}
+
+function refreshNoteBadge(bookId) {
+  const nc = bookNotes(bookId).length;
+  const el = document.querySelector(`[data-ncnt="${bookId}"]`);
+  if (el) { el.textContent = nc; el.style.display = nc ? '' : 'none'; }
+  // update count in notes header
+  document.querySelector('.nt-count') && (document.querySelector('.nt-count').textContent = nc);
+}
+
+/* ── Book actions ── */
+function selectBook(id) {
+  if (sel === id) { closePanel(); return; }
+  document.querySelectorAll('.brow').forEach(r => r.classList.toggle('on', parseInt(r.dataset.id) === id));
+  sel = id; addingNote = false;
+  renderPanel();
+}
+
+function closePanel() {
+  sel = null; addingNote = false;
+  document.querySelectorAll('.brow').forEach(r => r.classList.remove('on'));
+  const app = document.getElementById('app');
+  const panel = document.getElementById('panel');
+  app.classList.remove('panel-open');
+  panel.classList.remove('mobile-open');
+  setTimeout(() => { panel.style.display = 'none'; panel.innerHTML = ''; }, 380);
+}
+
+function toggleAdding() {
+  adding = !adding;
+  const wrap = document.getElementById('afwrap');
+  if (wrap) { wrap.classList.toggle('open', adding); if (adding) setTimeout(() => document.getElementById('fi-t')?.focus(), 80); }
+}
+
+function submitAdd() {
+  const title = document.getElementById('fi-t')?.value?.trim();
+  if (!title) { toast('Please enter a title'); return; }
+  const author = document.getElementById('fi-a')?.value?.trim() || '';
+  const pages  = parseInt(document.getElementById('fi-p')?.value) || null;
+  const genre  = document.getElementById('fi-g')?.value?.trim() || null;
+  const colors = ['#5a3e88','#2a6050','#7a3a20','#3a4a6a','#5a5020','#1a4a4a','#6a3042','#2a4a6a','#4a3a5a'];
+  books.push({ id: nextId++, title, subtitle: null, author, year: null, pages, progress: 0,
+    color: colors[Math.floor(Math.random()*colors.length)], letter: [...title][0].toUpperCase(),
+    genre, status: 'queue', started: null, rating: null, finished: null });
+  adding = false;
+  save();
+  toast(`"${title}" added to queue`);
+  renderMain(); updateCounts();
+}
+
+function updateProgress(id, val) {
+  const b = byId(id); if (!b) return;
+  b.progress = val;
+  save();
+  const lbl  = document.getElementById('plbl');
+  const ppct = document.getElementById('ppct');
+  const fill = document.getElementById('pfill');
+  if (lbl)  lbl.textContent  = `${b.progress} of ${b.pages} pages`;
+  if (ppct) ppct.textContent = fpct(b);
+  if (fill) fill.style.width = pct(b) + '%';
+  const rf = document.querySelector(`[data-fill="${id}"]`);
+  const rp = document.querySelector(`[data-pct="${id}"]`);
+  if (rf) rf.style.width = pct(b) + '%';
+  if (rp) rp.textContent = fpct(b);
+}
+
+function startReading(id) { const b=byId(id);if(!b)return;b.status='reading';b.started='Mar 21, 2025';save();renderMain();renderPanel();updateCounts();toast(`Started "${b.title}"`); }
+function startReReading(id) { const b=byId(id);if(!b)return;b.status='reading';b.progress=0;b.started='Mar 21, 2025';b.finished=null;save();renderMain();renderPanel();updateCounts();toast(`Re-reading "${b.title}"`); }
+function markDone(id) { const b=byId(id);if(!b)return;b.status='done';b.progress=b.pages||b.progress;b.finished='Mar 21, 2025';sel=id;save();renderMain();renderPanel();updateCounts();toast(`Finished "${b.title}"`); }
+function moveToQueue(id) { const b=byId(id);if(!b)return;b.status='queue';save();renderMain();renderPanel();updateCounts();toast(`"${b.title}" moved to queue`); }
+function removeBook(id) { const b=byId(id);if(!b)return;books=books.filter(x=>x.id!==id);notes=notes.filter(n=>n.bookId!==id);save();closePanel();setTimeout(()=>{renderMain();updateCounts();},200);toast(`"${b.title}" removed`); }
+function setRating(id, r) { const b=byId(id);if(!b)return;b.rating=b.rating===r?0:r;save();renderPanel(); }
+
+function toggleTheme() {
+  const h = document.documentElement;
+  const dark = h.getAttribute('data-theme') === 'dark';
+  const next = dark ? 'light' : 'dark';
+  h.setAttribute('data-theme', next);
+  document.getElementById('tlbl').textContent = dark ? 'Dark mode' : 'Light mode';
+  document.getElementById('meta-theme').setAttribute('content', dark ? '#f7f4ec' : '#15130e');
+  localStorage.setItem('folio-theme', next);
+}
+
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), 2600);
+}
+
+function esc(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+/* ── Keyboard ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (addingNote) cancelNote();
+    else if (sel) closePanel();
+  }
+});
+
+/* ── Theme restore ── */
+const savedTheme = localStorage.getItem('folio-theme');
+if (savedTheme) {
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.getElementById('meta-theme').setAttribute('content', savedTheme === 'light' ? '#f7f4ec' : '#15130e');
+}
+if (document.documentElement.getAttribute('data-theme') === 'light') {
+  document.getElementById('tlbl').textContent = 'Dark mode';
+}
+
+/* ── Service Worker ── */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () =>
+    navigator.serviceWorker.register('./sw.js').catch(console.warn)
+  );
+}
+
+setView('library');
+</script>
+</body>
+</html>
