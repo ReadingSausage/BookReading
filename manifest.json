@@ -6,12 +6,36 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
   "orientation": "portrait-primary",
+  "lang": "en",
+  "dir": "ltr",
   "background_color": "#15130e",
   "theme_color": "#15130e",
   "icons": [
-    { "src": "icon-192.svg", "sizes": "192x192", "type": "image/svg+xml", "purpose": "any maskable" },
-    { "src": "icon-512.svg", "sizes": "512x512", "type": "image/svg+xml", "purpose": "any maskable" }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "maskable" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "categories": ["books", "lifestyle", "productivity"]
+  "screenshots": [
+    {
+      "src": "screenshot-library.png",
+      "sizes": "1080x2400",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Library view with books in progress"
+    },
+    {
+      "src": "screenshot-stats.png",
+      "sizes": "1080x2400",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Stats and reading activity heatmap"
+    }
+  ],
+  "iarc_rating_id": "",
+  "categories": ["books", "lifestyle", "productivity"],
+  "prefer_related_applications": false,
+  "related_applications": []
 }
