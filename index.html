@@ -85,9 +85,9 @@ body{font-family:var(--ff-b);background:var(--bg);color:var(--t1);font-size:14px
 [data-theme="light"] .tt-thumb{transform:translateX(12px);background:var(--ac)}
 
 /* ── Bottom nav (mobile) ── */
-.bnav-i{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;
+.bnav-i{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;
   font-size:10px;color:var(--t3);cursor:pointer;border:none;background:none;font-family:var(--ff-b);
-  transition:color .13s}
+  transition:color .13s;min-height:48px;-webkit-tap-highlight-color:transparent}
 .bnav-i.on{color:var(--ac)}
 .bnav-i svg{flex-shrink:0}
 
@@ -101,8 +101,9 @@ body{font-family:var(--ff-b);background:var(--bg);color:var(--t1);font-size:14px
 
 /* ── Book rows ── */
 .blist{display:flex;flex-direction:column;gap:1px}
-.brow{display:flex;align-items:center;gap:14px;padding:10px 12px;border-radius:8px;cursor:pointer;
-  transition:background .13s;animation:slideUp .38s var(--ease) both;position:relative}
+.brow{display:flex;align-items:center;gap:14px;padding:12px 12px;border-radius:8px;cursor:pointer;
+  transition:background .13s;animation:slideUp .38s var(--ease) both;position:relative;
+  -webkit-tap-highlight-color:transparent;min-height:48px}
 .brow:hover{background:var(--s2)}
 .brow.on{background:var(--ac-bg)}
 .brow::after{content:'';position:absolute;right:0;top:50%;transform:translateY(-50%);width:3px;
@@ -158,8 +159,9 @@ body{font-family:var(--ff-b);background:var(--bg);color:var(--t1);font-size:14px
 .scard{background:var(--s1);border-radius:9px;padding:14px;animation:slideUp .38s var(--ease) both}
 .sval{font-size:26px;font-weight:300;color:var(--t1);font-family:var(--ff-d);letter-spacing:-.03em;line-height:1.1;margin-bottom:3px}
 .slbl2{font-size:11px;color:var(--t3)}
-.heatmap{display:flex;flex-wrap:wrap;gap:4px}
+.heatmap{display:flex;flex-wrap:wrap;gap:4px;justify-content:flex-start}
 .hday{width:13px;height:13px;border-radius:3px;background:var(--s2);transition:background .3s}
+@media(max-width:767px){.hday{width:calc((100vw - 32px - 7*4px)/8);height:calc((100vw - 32px - 7*4px)/8);max-width:18px;max-height:18px;border-radius:4px}}
 .hday.mid{background:color-mix(in srgb,var(--ac) 38%,var(--s3))}.hday.hot{background:color-mix(in srgb,var(--ac) 72%,var(--s3))}.hday.on{background:var(--ac)}
 
 /* ── Panel ── */
@@ -185,16 +187,19 @@ body{font-family:var(--ff-b);background:var(--bg);color:var(--t1);font-size:14px
 .prog-top{display:flex;justify-content:space-between;font-size:12px;color:var(--t2);margin-bottom:5px}
 .prog-track{height:4px;background:var(--s3);border-radius:2px;overflow:hidden;margin-bottom:9px}
 .prog-fill{height:100%;border-radius:2px;transition:width .5s var(--ease)}
-input[type=range].pslider{width:100%;height:4px;cursor:pointer;-webkit-appearance:none;appearance:none;
-  background:var(--s3);border-radius:2px;outline:none;border:none;display:block;margin-bottom:5px}
-input[type=range].pslider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;
-  border-radius:50%;background:var(--ac);cursor:pointer;transition:transform .15s}
-input[type=range].pslider::-webkit-slider-thumb:hover{transform:scale(1.2)}
+input[type=range].pslider{width:100%;height:6px;cursor:pointer;-webkit-appearance:none;appearance:none;
+  background:var(--s3);border-radius:3px;outline:none;border:none;display:block;margin-bottom:5px;
+  touch-action:manipulation;padding:12px 0}
+input[type=range].pslider::-webkit-slider-thumb{-webkit-appearance:none;width:24px;height:24px;
+  border-radius:50%;background:var(--ac);cursor:pointer;transition:transform .15s;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+input[type=range].pslider::-webkit-slider-thumb:hover{transform:scale(1.15)}
+input[type=range].pslider::-webkit-slider-thumb:active{transform:scale(1.25)}
 .slider-hint{font-size:11px;color:var(--t3);text-align:right}
 .pactions{display:flex;flex-direction:column;gap:7px;margin-bottom:18px}
-.pbtn{font-family:var(--ff-b);font-size:13px;padding:9px 12px;border-radius:6px;border:1px solid var(--bd2);
+.pbtn{font-family:var(--ff-b);font-size:13px;padding:12px 12px;border-radius:6px;border:1px solid var(--bd2);
   background:transparent;color:var(--t2);cursor:pointer;text-align:left;
-  transition:background .13s,color .13s,transform .1s;width:100%}
+  transition:background .13s,color .13s,transform .1s;width:100%;min-height:48px;
+  -webkit-tap-highlight-color:transparent}
 .pbtn:hover{background:var(--s2);color:var(--t1)}.pbtn.pri{border-color:var(--ac);color:var(--ac);background:var(--ac-bgl)}
 .pbtn.pri:hover{background:var(--ac);color:var(--bg)}.pbtn.danger{border-color:rgba(192,90,74,.3);color:var(--warn)}
 .pbtn.danger:hover{background:var(--warn-bg)}.pbtn:active{transform:scale(.98)}
@@ -272,7 +277,7 @@ input[type=range].pslider::-webkit-slider-thumb:hover{transform:scale(1.2)}
   transition:opacity .2s,transform .25s var(--ease);pointer-events:none;
   white-space:nowrap;z-index:300;border:1px solid var(--bd2)}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
-@media(max-width:640px){.toast{bottom:calc(64px + env(safe-area-inset-bottom,0px))}}
+@media(max-width:767px){.toast{bottom:calc(72px + env(safe-area-inset-bottom,0px))}}
 </style>
 </head>
 <body>
@@ -347,26 +352,13 @@ input[type=range].pslider::-webkit-slider-thumb:hover{transform:scale(1.2)}
 
 <script>
 /* ── Persistence ──────────────────────────────── */
+const DATA_VERSION = 2;
 const DEFAULTS = {
-  books: [
-    {id:1,title:"Gödel, Escher, Bach",subtitle:"An Eternal Golden Braid",author:"Douglas Hofstadter",year:1979,pages:777,progress:368,color:"#1c5e44",letter:"G",genre:"Non-fiction",status:"reading",started:"Jan 8, 2025",rating:null,finished:null},
-    {id:2,title:"Steppenwolf",subtitle:null,author:"Hermann Hesse",year:1927,pages:218,progress:176,color:"#3b3888",letter:"S",genre:"Fiction",status:"reading",started:"Feb 14, 2025",rating:null,finished:null},
-    {id:3,title:"The Brothers Karamazov",subtitle:null,author:"Fyodor Dostoevsky",year:1880,pages:824,progress:99,color:"#6e2e16",letter:"K",genre:"Fiction",status:"reading",started:"Mar 1, 2025",rating:null,finished:null},
-    {id:4,title:"Dune",subtitle:null,author:"Frank Herbert",year:1965,pages:688,progress:0,color:"#7a5014",letter:"D",genre:"Science fiction",status:"queue",started:null,rating:null,finished:null},
-    {id:5,title:"Principia Mathematica",subtitle:"Vol. I",author:"Whitehead & Russell",year:1910,pages:674,progress:0,color:"#2e2c24",letter:"P",genre:"Mathematics",status:"queue",started:null,rating:null,finished:null},
-    {id:6,title:"The Stranger",subtitle:null,author:"Albert Camus",year:1942,pages:159,progress:159,color:"#3a5870",letter:"S",genre:"Fiction",status:"done",started:"Dec 1, 2024",rating:5,finished:"Jan 3, 2025"},
-    {id:7,title:"A Beautiful Mind",subtitle:null,author:"Sylvia Nasar",year:1998,pages:461,progress:461,color:"#3d5e3e",letter:"M",genre:"Biography",status:"done",started:"Nov 2, 2024",rating:4,finished:"Dec 17, 2024"},
-  ],
-  notes: [
-    {id:101,bookId:1,page:45,text:"The strange loop concept first emerges here — a system can refer back to itself meaningfully. This is the structural core of everything that follows.",tags:["idea"],starred:true,ts:1739800000000},
-    {id:102,bookId:1,page:112,text:"\"I am the strange loop\" — the thesis, stated obliquely for the first time.",tags:["quote"],starred:false,ts:1739900000000},
-    {id:103,bookId:1,page:203,text:"How does Hofstadter reconcile top-down causality here with the reductionist account of neurons? Come back to this.",tags:["question"],starred:true,ts:1740100000000},
-    {id:104,bookId:2,page:38,text:"Haller sees his duality as a curse. Hesse frames it as the human condition — everyone has a wolf.",tags:["idea"],starred:false,ts:1740200000000},
-    {id:105,bookId:2,page:87,text:"The Magic Theatre sequence is deliberately surreal. Don't over-interpret individual scenes — respond to the whole.",tags:["important"],starred:true,ts:1740500000000},
-    {id:106,bookId:6,page:23,text:"\"Mother died today. Or maybe yesterday; I can't be sure.\" — the entire emotional register of the novel in one sentence.",tags:["quote","important"],starred:true,ts:1735000000000},
-  ],
-  nextId: 300,
-  nextNoteId: 200,
+  books: [],
+  notes: [],
+  sessions: [],
+  nextId: 1,
+  nextNoteId: 1,
 };
 
 function load() {
@@ -374,9 +366,14 @@ function load() {
     const b = localStorage.getItem('folio-books');
     const n = localStorage.getItem('folio-notes');
     const ids = localStorage.getItem('folio-ids');
+    const s = localStorage.getItem('folio-sessions');
     if (b) books = JSON.parse(b);
     if (n) notes = JSON.parse(n);
     if (ids) { const o = JSON.parse(ids); nextId = o.nextId; nextNoteId = o.nextNoteId; }
+    if (s) sessions = JSON.parse(s);
+    // migrate: ensure sessions array exists for older installs
+    if (!Array.isArray(sessions)) sessions = [];
+    localStorage.setItem('folio-version', String(DATA_VERSION));
   } catch(e) {}
 }
 
@@ -385,12 +382,49 @@ function save() {
     localStorage.setItem('folio-books', JSON.stringify(books));
     localStorage.setItem('folio-notes', JSON.stringify(notes));
     localStorage.setItem('folio-ids', JSON.stringify({nextId, nextNoteId}));
+    localStorage.setItem('folio-sessions', JSON.stringify(sessions));
+    localStorage.setItem('folio-version', String(DATA_VERSION));
   } catch(e) {}
 }
 
+function exportData() {
+  const data = JSON.stringify({ version: DATA_VERSION, books, notes, sessions, nextId, nextNoteId, exportedAt: new Date().toISOString() }, null, 2);
+  const blob = new Blob([data], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'folio-backup-' + new Date().toISOString().slice(0,10) + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('Backup downloaded');
+}
+
+function importData() {
+  const input = document.createElement('input');
+  input.type = 'file'; input.accept = '.json';
+  input.onchange = e => {
+    const file = e.target.files[0]; if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      try {
+        const d = JSON.parse(ev.target.result);
+        if (d.books) books = d.books;
+        if (d.notes) notes = d.notes;
+        if (d.sessions) sessions = d.sessions;
+        if (d.nextId) nextId = d.nextId;
+        if (d.nextNoteId) nextNoteId = d.nextNoteId;
+        save();
+        toast('Data restored');
+        sel = null; setView(view);
+      } catch(err) { toast('Invalid backup file'); }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
 /* ── State ── */
-let books = JSON.parse(JSON.stringify(DEFAULTS.books));
-let notes = JSON.parse(JSON.stringify(DEFAULTS.notes));
+let books = [];
+let notes = [];
+let sessions = [];
 let nextId = DEFAULTS.nextId;
 let nextNoteId = DEFAULTS.nextNoteId;
 load();
@@ -508,33 +542,54 @@ function renderQueueView(m) {
 }
 
 function renderStats() {
-  const NOW = new Date(2025, 2, 21);
-  const sessions = [];
-  for (let i=55;i>=0;i--) {
-    const d=new Date(NOW);d.setDate(d.getDate()-i);
-    if(i%7!==0&&i%11!==3){const n=1+Math.floor(Math.random()*2);for(let j=0;j<n;j++)sessions.push({date:d.toDateString(),pages:12+Math.floor(Math.random()*38)});}
-  }
-  const monthStart = new Date(2025,2,1);
-  const monthPages = sessions.filter(s=>new Date(s.date)>=monthStart).reduce((a,s)=>a+s.pages,0);
+  const NOW = new Date();
+  NOW.setHours(23,59,59,999);
+  // Aggregate sessions by date (guard against corrupt/old session data)
+  const pg = s => (typeof s.pages === 'number' && !isNaN(s.pages)) ? s.pages : 0;
+  const byDate = {};
+  sessions.forEach(s => { byDate[s.date] = (byDate[s.date] || 0) + pg(s); });
+  // Pages this month
+  const monthPrefix = NOW.toISOString().slice(0, 7); // "YYYY-MM"
+  const monthPages = sessions.filter(s => s.date.startsWith(monthPrefix)).reduce((a,s) => a + pg(s), 0);
+  // Day streak (consecutive days ending today or yesterday)
   let streak = 0;
-  for(let i=0;i<30;i++){const d=new Date(NOW);d.setDate(d.getDate()-i);if(sessions.some(s=>s.date===d.toDateString()))streak++;else break;}
-  const avg = sessions.length ? Math.round(sessions.reduce((a,s)=>a+s.pages,0)/Math.max(1,new Set(sessions.map(s=>s.date)).size)) : 0;
-  const cells = Array(56).fill(0).map((_,i)=>{
-    const d=new Date(NOW);d.setDate(d.getDate()-(55-i));
-    const t=sessions.filter(s=>s.date===d.toDateString()).reduce((a,s)=>a+s.pages,0);
-    const c=t>40?'on':t>20?'hot':t>0?'mid':'';
-    return `<div class="hday ${c}" title="${d.toDateString()}${t?' · '+t+' pp':''}"></div>`;
+  for (let i = 0; i < 365; i++) {
+    const d = new Date(NOW); d.setDate(d.getDate() - i);
+    const key = d.toISOString().slice(0, 10);
+    if (byDate[key]) streak++; else if (i === 0) continue; else break;
+  }
+  // Avg pages per active day
+  const uniqueDays = Object.keys(byDate).length;
+  const totalPages = sessions.reduce((a,s) => a + pg(s), 0);
+  const avg = uniqueDays ? Math.round(totalPages / uniqueDays) : 0;
+  // Total pages read from book progress
+  const allPagesRead = books.reduce((a,b) => a + b.progress, 0);
+  // Heatmap cells — 56 days
+  const cells = Array(56).fill(0).map((_, i) => {
+    const d = new Date(NOW); d.setDate(d.getDate() - (55 - i));
+    const key = d.toISOString().slice(0, 10);
+    const t = byDate[key] || 0;
+    const c = t > 40 ? 'on' : t > 20 ? 'hot' : t > 0 ? 'mid' : '';
+    const dayLbl = d.toLocaleDateString(undefined, {month:'short', day:'numeric'});
+    return `<div class="hday ${c}" title="${dayLbl}${t ? ' · ' + t + ' pp' : ''}"></div>`;
   }).join('');
   const reading = byS('reading'); const done = byS('done');
-  return `<div class="m-hd"><h1 class="m-title">Stats</h1></div>
+  const hasData = sessions.length > 0 || books.length > 0;
+  return `<div class="m-hd"><h1 class="m-title">Stats</h1>
+      <div style="display:flex;gap:8px">
+        <button class="m-act" onclick="exportData()" style="font-size:12px">Export</button>
+        <button class="m-act" onclick="importData()" style="font-size:12px">Import</button>
+      </div>
+    </div>
+    ${!hasData ? `<div class="empty"><strong>No reading data yet</strong>Start reading a book and track your progress to see stats here.</div>` : `
     <div class="sgrid">
       <div class="scard" style="animation-delay:0ms"><div class="sval">${monthPages}</div><div class="slbl2">Pages this month</div></div>
       <div class="scard" style="animation-delay:50ms"><div class="sval">${streak}</div><div class="slbl2">Day streak</div></div>
       <div class="scard" style="animation-delay:100ms"><div class="sval">${avg}</div><div class="slbl2">Avg. / day</div></div>
     </div>
     <div class="sgrid" style="margin-top:-8px">
-      <div class="scard" style="animation-delay:140ms"><div class="sval">${notes.length}</div><div class="slbl2">Total notes</div></div>
-      <div class="scard" style="animation-delay:180ms"><div class="sval">${notes.filter(n=>n.starred).length}</div><div class="slbl2">Starred</div></div>
+      <div class="scard" style="animation-delay:140ms"><div class="sval">${allPagesRead}</div><div class="slbl2">Total pages</div></div>
+      <div class="scard" style="animation-delay:180ms"><div class="sval">${notes.length}</div><div class="slbl2">Notes</div></div>
       <div class="scard" style="animation-delay:220ms"><div class="sval">${books.length}</div><div class="slbl2">Books</div></div>
     </div>
     <div class="sec-hd"><span class="sec-lbl">Activity · 56 days</span><div class="sec-line"></div></div>
@@ -549,7 +604,7 @@ function renderStats() {
       <div class="pbar"><div class="pfill" style="width:${pct(b)}%;background:${b.color}"></div></div>
     </div>`).join('')}` : ''}
     ${done.length ? `<div class="sec-hd" style="margin-top:8px"><span class="sec-lbl">Finished · ${done.length}</span><div class="sec-line"></div></div>
-      <div class="blist">${done.map((b,i)=>rowHTML(b,i)).join('')}</div>` : ''}`;
+      <div class="blist">${done.map((b,i)=>rowHTML(b,i)).join('')}</div>` : ''}`}`;
 }
 
 /* ── Panel ── */
@@ -812,6 +867,17 @@ function submitAdd() {
 function updateProgress(id, val) {
   const b = byId(id); if (!b) return;
   b.progress = val;
+  // Upsert today's session for this book: one entry per book per day
+  const today = new Date().toISOString().slice(0, 10);
+  let sess = sessions.find(s => s.date === today && s.bookId === id);
+  if (!sess) {
+    sess = { date: today, bookId: id, baseline: val, pages: 0 };
+    sessions.push(sess);
+  }
+  // pages = net forward progress from where the book was at start of today
+  sess.pages = Math.max(0, val - sess.baseline);
+  // clean up zero-page sessions so they don't clutter the data
+  if (sess.pages === 0) sessions = sessions.filter(s => s !== sess);
   save();
   const lbl  = document.getElementById('plbl');
   const ppct = document.getElementById('ppct');
@@ -825,9 +891,10 @@ function updateProgress(id, val) {
   if (rp) rp.textContent = fpct(b);
 }
 
-function startReading(id) { const b=byId(id);if(!b)return;b.status='reading';b.started='Mar 21, 2025';save();renderMain();renderPanel();updateCounts();toast(`Started "${b.title}"`); }
-function startReReading(id) { const b=byId(id);if(!b)return;b.status='reading';b.progress=0;b.started='Mar 21, 2025';b.finished=null;save();renderMain();renderPanel();updateCounts();toast(`Re-reading "${b.title}"`); }
-function markDone(id) { const b=byId(id);if(!b)return;b.status='done';b.progress=b.pages||b.progress;b.finished='Mar 21, 2025';sel=id;save();renderMain();renderPanel();updateCounts();toast(`Finished "${b.title}"`); }
+function fmtDate(d) { const m=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']; return m[d.getMonth()]+' '+d.getDate()+', '+d.getFullYear(); }
+function startReading(id) { const b=byId(id);if(!b)return;b.status='reading';b.started=fmtDate(new Date());save();renderMain();renderPanel();updateCounts();toast(`Started "${b.title}"`); }
+function startReReading(id) { const b=byId(id);if(!b)return;b.status='reading';b.progress=0;b.started=fmtDate(new Date());b.finished=null;save();renderMain();renderPanel();updateCounts();toast(`Re-reading "${b.title}"`); }
+function markDone(id) { const b=byId(id);if(!b)return;b.status='done';b.progress=b.pages||b.progress;b.finished=fmtDate(new Date());sel=id;save();renderMain();renderPanel();updateCounts();toast(`Finished "${b.title}"`); }
 function moveToQueue(id) { const b=byId(id);if(!b)return;b.status='queue';save();renderMain();renderPanel();updateCounts();toast(`"${b.title}" moved to queue`); }
 function removeBook(id) { const b=byId(id);if(!b)return;books=books.filter(x=>x.id!==id);notes=notes.filter(n=>n.bookId!==id);save();closePanel();setTimeout(()=>{renderMain();updateCounts();},200);toast(`"${b.title}" removed`); }
 function setRating(id, r) { const b=byId(id);if(!b)return;b.rating=b.rating===r?0:r;save();renderPanel(); }

@@ -1,8 +1,10 @@
 {
+  "id": "folio-reading-tracker",
   "name": "Folio",
   "short_name": "Folio",
   "description": "A personal reading tracker with notes",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#15130e",
