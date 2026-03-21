@@ -44,19 +44,19 @@ body{font-family:var(--ff-b);background:var(--bg);color:var(--t1);font-size:14px
 /* ── DESKTOP layout ── */
 #app{display:grid;grid-template-columns:172px 1fr;height:100%;transition:grid-template-columns .38s var(--ease)}
 #app.panel-open{grid-template-columns:172px 1fr 310px}
-#bottomnav{display:none}
+#bottomnav{display:none;flex-shrink:0}
 
 /* ── MOBILE layout ── */
-@media(max-width:640px){
-  #app{grid-template-columns:1fr !important;grid-template-rows:1fr;height:100dvh}
-  #sidebar{display:none}
-  #bottomnav{display:flex;border-top:1px solid var(--bd);background:var(--bnav-bg);padding:6px 0 max(6px,env(safe-area-inset-bottom));
-    position:fixed;bottom:0;left:0;right:0;z-index:100;transition:background .3s,border-color .3s}
-  #main{padding:16px 16px 80px;overflow-y:auto;overflow-x:hidden;height:100%}
+@media(max-width:767px){
+  #app{display:flex !important;flex-direction:column !important;height:100dvh !important;overflow:hidden}
+  #sidebar{display:none !important}
+  #bottomnav{display:flex;flex-shrink:0;border-top:1px solid var(--bd);background:var(--bnav-bg);
+    padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:100;transition:background .3s,border-color .3s}
+  #main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px 16px 16px;-webkit-overflow-scrolling:touch}
   #panel{position:fixed;top:0;left:0;right:0;bottom:0;z-index:90;transform:translateX(100%);
-    transition:transform .35s var(--ease);width:100% !important;border:none !important;display:flex !important;flex-direction:column;overflow:hidden}
+    transition:transform .35s var(--ease);width:100% !important;border:none !important;
+    display:flex !important;flex-direction:column;overflow:hidden;background:var(--bg)}
   #panel.mobile-open{transform:translateX(0)}
-  #app.panel-open{grid-template-columns:1fr !important}
 }
 
 /* ── Sidebar ── */
@@ -415,7 +415,7 @@ function sortedNotes(id) {
   });
 }
 
-function isMobile() { return window.innerWidth <= 640; }
+function isMobile() { return window.innerWidth <= 767; }
 
 function updateCounts() {
   document.getElementById('c-all').textContent = books.length;
