@@ -22,14 +22,14 @@
     {
       "src": "screenshot-library.jpg",
       "sizes": "1439x2483",
-      "type": "image/png",
+      "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "Library view with books in progress"
     },
     {
       "src": "screenshot-stats.jpg",
       "sizes": "1439x2227",
-      "type": "image/png",
+      "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "Stats and reading activity heatmap"
     }
