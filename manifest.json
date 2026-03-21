@@ -20,15 +20,15 @@
   ],
   "screenshots": [
     {
-      "src": "screenshot-library.png",
-      "sizes": "1080x2400",
+      "src": "screenshot-library.jpg",
+      "sizes": "1439x2483",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Library view with books in progress"
     },
     {
-      "src": "screenshot-stats.png",
-      "sizes": "1080x2400",
+      "src": "screenshot-stats.jpg",
+      "sizes": "1439x2227",
       "type": "image/png",
       "form_factor": "narrow",
       "label": "Stats and reading activity heatmap"
