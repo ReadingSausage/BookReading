@@ -48,11 +48,12 @@ body{font-family:var(--ff-b);background:var(--bg);color:var(--t1);font-size:14px
 
 /* ── MOBILE layout ── */
 @media(max-width:767px){
-  #app{display:flex !important;flex-direction:column !important;height:100dvh !important;overflow:hidden}
+  body{display:flex;flex-direction:column;height:100dvh;overflow:hidden}
+  #app{flex:1;min-height:0;display:flex !important;flex-direction:column !important;overflow:hidden}
   #sidebar{display:none !important}
+  #main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px 16px 16px;-webkit-overflow-scrolling:touch}
   #bottomnav{display:flex;flex-shrink:0;border-top:1px solid var(--bd);background:var(--bnav-bg);
     padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:100;transition:background .3s,border-color .3s}
-  #main{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:16px 16px 16px;-webkit-overflow-scrolling:touch}
   #panel{position:fixed;top:0;left:0;right:0;bottom:0;z-index:90;transform:translateX(100%);
     transition:transform .35s var(--ease);width:100% !important;border:none !important;
     display:flex !important;flex-direction:column;overflow:hidden;background:var(--bg)}
