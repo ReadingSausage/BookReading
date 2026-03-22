@@ -229,22 +229,23 @@ input[type=range].pslider::-webkit-slider-thumb:active{transform:scale(1.25)}
 .note-card{background:var(--s1);border-radius:8px;padding:11px 12px;margin-bottom:7px;
   animation:slideUp .3s var(--ease) both;position:relative;transition:background .13s}
 .note-card:hover{background:var(--s2)}
-.note-card:hover .nc-del{opacity:1}
 .nc-top{display:flex;align-items:flex-start;gap:7px;margin-bottom:7px}
 .nc-page{font-size:11px;font-weight:500;color:var(--ac);background:var(--ac-bgl);padding:2px 7px;
   border-radius:3px;white-space:nowrap;flex-shrink:0;cursor:default;border:none;font-family:var(--ff-b)}
 .nc-star{font-size:14px;color:var(--t3);cursor:pointer;transition:color .13s,transform .15s;
-  padding:0;background:none;border:none;flex-shrink:0;line-height:1}
+  padding:8px;background:none;border:none;flex-shrink:0;line-height:1;margin:-8px -4px -8px 0}
 .nc-star:hover{transform:scale(1.2)}.nc-star.on{color:var(--ac)}
 .nc-tags{display:flex;flex-wrap:wrap;gap:3px;flex:1}
 .nc-tag{font-size:10px;padding:1px 6px;border-radius:3px;background:var(--s3);color:var(--t3)}
 .nc-tag.quote{color:#7aadca;background:rgba(122,173,202,.12)}.nc-tag.idea{color:#9ecb77;background:rgba(158,203,119,.11)}
 .nc-tag.question{color:#d0a060;background:rgba(208,160,96,.11)}.nc-tag.important{color:#c07878;background:rgba(192,120,120,.11)}
 .nc-body{font-size:13px;color:var(--t2);line-height:1.65;word-break:break-word}
+.nc-foot{display:flex;justify-content:flex-end;margin-top:6px}
 .nc-del{background:none;border:none;color:var(--t3);cursor:pointer;
-  font-size:14px;opacity:0;transition:opacity .13s,color .13s;padding:8px 10px;border-radius:4px;font-family:var(--ff-b);flex-shrink:0;min-width:36px;min-height:36px;display:flex;align-items:center;justify-content:center}
+  font-size:11px;opacity:0;transition:opacity .13s,color .13s;padding:6px 8px;border-radius:4px;font-family:var(--ff-b)}
+.note-card:hover .nc-del{opacity:1}
 .nc-del:hover{color:var(--warn);background:var(--warn-bg)}
-@media(max-width:640px){.nc-del{opacity:1}}
+@media(max-width:640px){.nc-del{opacity:.6}}
 
 .add-note-form{background:var(--s1);border:1px solid var(--bd2);border-radius:8px;padding:12px;
   margin-bottom:8px;animation:slideUp .25s var(--ease)}
@@ -649,9 +650,9 @@ function renderPanel() {
         <span class="nc-page">p.${n.page}</span>
         <div class="nc-tags">${tagBadges}</div>
         <button class="nc-star${n.starred?' on':''}" onclick="toggleNoteStar(${n.id})" title="${n.starred?'Unstar':'Star'}">★</button>
-        <button class="nc-del" onclick="deleteNote(${n.id})" title="Delete">✕</button>
       </div>
       <div class="nc-body">${esc(n.text)}</div>
+      <div class="nc-foot"><button class="nc-del" onclick="deleteNote(${n.id})" title="Delete">✕ delete</button></div>
     </div>`;
   }).join('');
 
