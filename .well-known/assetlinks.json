@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "io.github.readingsausage.twa",
+        "sha256_cert_fingerprints": ["EF:22:D8:A1:A8:BB:39:33:A2:3F:35:2D:DF:E0:1D:59:D8:8C:A6:1C:C2:BC:D2:02:A2:F8:CE:E4:FB:04:67:43"]
+      }
+    }]
